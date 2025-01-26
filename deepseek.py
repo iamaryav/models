@@ -1,24 +1,25 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-model_path = "./weights"
+model_path = "./deepseek"
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
-model = AutoModelForCausalLM.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(model_path,
+                                              torch_dtype=torch.float16,
+                                              device_map=None).to("cuda")
 
 
 # Use GPU is present
-device = "cuda" if torch.cuda.is_availabel() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 model = model.to(device)
 
 
 # Input text
 input_text = "Hi, How are you?"
-input_ids = tokenizer(input_text, return_tensors="pt").input_ids.to(device)
-
+inputs = tokenizer(input_text, return_tensors="pt")
+outputs = model.generate(**inputs)
 
 # Generate Text
-output_ids = model.generate(input_ids, max_length=50)
-output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 print("Generated Text: ", output_text)
