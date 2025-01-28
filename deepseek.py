@@ -3,6 +3,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 model_path = "./deepseek"
 
+# Not working My cpu is killing this process due to accessive RAM use
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(model_path,
                                               torch_dtype=torch.float16,
