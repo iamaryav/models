@@ -2,7 +2,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 # Path to the model
-model_path = "./deepseek-8b"
+model_path = "./deepseek8"
 
 # Load tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -25,7 +25,7 @@ device = model.device
 print(f"Using device: {device}")
 
 # Input text
-input_text = "What is the capital of France?"
+input_text = "What is the capital of India?"
 print(f"My Question: {input_text}")
 
 # Tokenize input and move to the correct device
