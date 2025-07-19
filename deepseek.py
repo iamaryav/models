@@ -33,13 +33,14 @@ inputs = tokenizer(q_1, return_tensors="pt").to(device)
 
 # Generate output
 try:
-    outputs = model.generate(
-        **inputs,
-        max_new_tokens=200,
-        repetition_penalty=1.1,  
-        do_sample=True,
-        temperature=0.7  
-    )
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=200,
+            repetition_penalty=1.1,  
+            do_sample=True,
+            temperature=0.7  
+        )
 except Exception as e:
     print(f"Error during generation: {e}")
     exit()
