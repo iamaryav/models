@@ -1,4 +1,6 @@
 """
+This class I wrote it to understand the qwen 2 architecture and load their pretrained weight
+so later I can fine tuen it. Currenlty their is not training file for this will add in future
 Qwen2 model
 Features:
 - untied weights for token and lm_head
