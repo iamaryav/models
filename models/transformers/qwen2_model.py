@@ -1,6 +1,4 @@
 """
-This class I wrote it to understand the qwen 2 architecture and load their pretrained weight
-so later I can fine tuen it. Currenlty their is no training file for this will add in future
 Qwen2 model
 Features:
 - untied weights for token and lm_head
@@ -11,12 +9,14 @@ Features:
 """
 import math
 import inspect
+from functools import partial
 from typing import Any, Optional, Union
 from dataclasses import dataclass
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from models.helpers.muon import Muon
 
 @dataclass
 class Qwen2Config():
@@ -39,7 +39,8 @@ class Qwen2Config():
     # intermediate_size: int = 8960 # 5 times of hidden size
     # max_seq_len: int = 32678
 
-    bias: bool = True
+    # making false to match nanochat gpt py
+    bias: bool = False # True
     layer_types: list = ("full_attention") # for _ in range(num_hidden_layers)]
 
     rms_norm_eps: float = 1e-06
@@ -245,7 +246,6 @@ class CausalAttention(nn.Module):
         self.scaling = self.head_dim ** -0.5
         self.num_key_value_groups = config.num_attention_heads // config.num_key_value_heads
 
-        # Flash Attention - ? 
         self.q_proj = nn.Linear(config.hidden_size, config.num_attention_heads * self.head_dim, bias=config.bias)
         self.k_proj = nn.Linear(config.hidden_size, config.num_key_value_heads * self.head_dim, bias=config.bias)
         self.v_proj = nn.Linear(config.hidden_size, config.num_key_value_heads * self.head_dim, bias=config.bias)
@@ -296,6 +296,7 @@ class CausalAttention(nn.Module):
 
 class MLP(nn.Module):
     """
+    This is also called FeedForwardNetwork
     Gated MLP (SwiGLU-style) in Qwen2
     generally Gated MLP helps model to converge faster, and more expressive, dynamic feature selection, stable training
     """
@@ -474,101 +475,54 @@ class Qwen2Model(nn.Module):
             loss = loss_function(logits=logits, labels=labels, vocab_size=self.config.vocab_size, **kwargs)
         
         return logits, loss
+    
+    def get_num_params(self, non_embedding=True):
+        num_params = sum(p.numel() for p in self.parameters())
+        return num_params
 
-    def setup_optimizers(self, weight_decay, learning_rate, betas, device_type):
-        # get all the candidate parameters
-        param_dict = {pn: p for pn, p in self.named_parameters()}
-        # print(param_dict)
-        # filter out those that do not require grad update
-        param_dict = {pn: p for pn, p in param_dict.items() if p.requires_grad}
-        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2]
-        nodecay_params = [p for n, p in param_dict.items() if p.dim() < 2]
-        optim_groups = [
-            {"params": decay_params, "weight_decay": weight_decay},
-            {"params": nodecay_params, "weight_decay": 0.0}
+    def estimate_mfu(self, fwdbwd_per_iter, dt):
+        # estimate number of flops per iteration
+        N = self.get_num_params()
+        cfg = self.config
+        L, H, Q, T = cfg.num_hidden_layers, cfg.num_attention_heads, cfg.hidden_size//cfg.num_attention_heads, cfg.max_seq_len
+        flops_per_token = 6*N + 12*L*H*Q*T
+        flops_per_fwdbwd = flops_per_token * T
+        flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter
+        flops_achieved = flops_per_iter * (1.0/dt) 
+        flops_promised = 3e12 # nvidia 1650
+        mfu = flops_achieved / flops_promised
+        return mfu
+
+    def setup_optimizers(self, unembedding_lr=0.004, embedding_lr=0.2, matrix_lr=0.02, weight_decay=0.0):
+        model_dim = self.config.hidden_size
+        # split the parameters in the three group
+        # removing all the 1D - layernorm and biases that will not be used in muon
+        matrix_Params = list(param for param in self.model.layers.parameters() if param.dim() >= 2)
+        embedding_params=  list(self.model.embed_tokens.parameters())
+        lm_head_params = list(self.lm_head.parameters())
+        assert len(list(self.parameters())) == len(matrix_Params) + len(embedding_params) + len(lm_head_params) + 5
+        # AdamW optimizer is used for the embedding and lm_head
+        # this below line scales the LR for the AdamW parameters by 1/(model ** 0.5)
+        dmodel_lr_scale = (model_dim / 64) ** -0.5
+        print(f"Scaling the RL for the AdamW parameters ∝1/√({model_dim}/64) = {dmodel_lr_scale:.6f}")
+        adam_groups = [
+            dict(params=lm_head_params, lr=unembedding_lr * dmodel_lr_scale),
+            dict(params=embedding_params, lr=embedding_lr * dmodel_lr_scale)
         ]
-        print(f"size of total params: {len(param_dict)}")
-        num_decay_params = sum(p.numel() for p in decay_params)
-        num_nodecay_params = sum(p.numel() for p in nodecay_params)
-        print(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params}")
-        print(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params}")
-        # print(f"adam params: {inspect.signature(torch.optim.AdamW).parameters}")
-        fused_availabel = "fused" in inspect.signature(torch.optim.AdamW).parameters
-        # print(fused_availabel)
-        use_fused = fused_availabel and device_type == "cuda"
-        extra_args = dict(fused=True) if use_fused else dict()
-        # print(extra_args)
-        optimizer = torch.optim.AdamW(optim_groups, lr=learning_rate, betas=betas, **extra_args)
-        print(f"using fused AdamW: {use_fused}")
-        # print(optimizer)
-        return optimizer
+        adamw_kwargs = dict(betas=(0.8, 0.95), eps=1e-10, weight_decay=weight_decay)
+        AdamFactory = partial(torch.optim.AdamW, fused=True)
+        adamw_optimizer = AdamFactory(adam_groups, **adamw_kwargs)
+        # Create muon optimizer
+        muon_kwargs = dict(lr=matrix_lr, momentum=0.95)
+        MuonFactory = Muon
+        muon_optimizer = MuonFactory(matrix_Params, **muon_kwargs)
+        # combine the optimizer
+        optimizers = [adamw_optimizer, muon_optimizer]
+        for opt in optimizers:
+            for group in opt.param_groups:
+                group["initial_lr"] = group["lr"]
 
-    @classmethod
-    def from_pretrained(cls, model_path="./qwen", device=None, max_layer=None):
-        """
-        Load pretrained weights into custom architecture for less reource computers
-
-        Args:
-        """
-        from transformers import AutoConfig, AutoModelForCausalLM
-        import gc
-        if device is None:
-            device = "cuda" if torch.cuda.is_available else "cpu"
-
-        print(f"Loading {model_path} to {device}....")
-
-        # Load HF config
-        hf_config = AutoConfig.from_pretrained(model_path)
-        from model import Qwen2Config
-        from model import Qwen2Config
-        config = Qwen2Config()
-        config.vocab_size = hf_config.vocab_size
-        config.hidden_size = hf_config.hidden_size
-        config.num_hidden_layers = hf_config.num_hidden_layers
-        config.num_attention_heads = hf_config.num_attention_heads
-        config.num_key_value_heads = hf_config.num_key_value_heads
-        config.intermediate_size = hf_config.intermediate_size
-        config.max_position_embeddings = hf_config.max_position_embeddings
-        config.rms_norm_eps = hf_config.rms_norm_eps
-        config.rope_theta = hf_config.rope_theta
-
-        if max_layer is not None:
-            config.num_hidden_layers = min(max_layer, config.num_hidden_layers)
-            print(f"Loading only first {config.num_hidden_layers} layers")
-        
-        config.layer_types = ["full_attention"] * config.num_hidden_layers
-
-        model = cls(config)
-        # print("here......")
-
-        hf_model = AutoModelForCausalLM.from_pretrained(
-            model_path,
-            torch_dtype=torch.float16,
-            device_map = "cpu",
-            low_cpu_mem_usage=True
-        )
-
-        # copy weights
-        hf_state = hf_model.state_dict()
-        model_state = model.state_dict()
-
-        loaded = 0
-        for key in model_state.keys():
-            if key in hf_state and hf_state[key].shape == model_state[key].shape:
-                model_state[key].copy_(hf_state[key])
-                loaded += 1
-                del hf_state[key]
-                if loaded % 50 == 0:
-                    gc.collect()
-        print(f"Loaded {loaded}/{len(model_state)} weights")
-
-        # cleanup
-        del hf_model, hf_state
-        gc.collect()
-        torch.cuda.empty_cache() if torch.cuda.is_available else None
-
-        return model.to(device).eval()
-
+        return optimizers
     
     @torch.no_grad()
     def generate(self, input_ids: torch.Tensor, max_new_tokens: int= 50, top_k=None):
@@ -596,8 +550,6 @@ class Qwen2Model(nn.Module):
                                         past_key_values=past_key_value,
                                         cache_position=cache_position
                                         )
-            # do cache works?
-            # print(past_key_value.get_seq_len())
             # get the last token
             next_token_logits = logits[:, -1, :]
 
@@ -623,38 +575,6 @@ class Qwen2Model(nn.Module):
                 break
 
         return input_ids
-def out_with_pretrained_model():
-    """
-    Testing with qwen2 pretrained weights
-    """
-
-    prompt = "What is the capital of India?"
-    model_path = "./qwen"
-    # device = "cuda" if torch.cuda.is_available() else "cpu"
-    device = "cpu"
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    inputs = tokenizer(prompt, return_tensors="pt")
-    input_ids = inputs["input_ids"].to(device)
-    print(f"prompt: {prompt}")
-    print(f"input tokens: {input_ids[0].tolist()}")
-
-    print(f"Loading pretrain model")
-
-    model = Qwen2Model.from_pretrained(model_path)
-    model.to(device)
-    model.eval()
-
-    with torch.no_grad():
-        output_ids = model.generate(
-            input_ids,
-            max_new_tokens=50,
-            top_k=50,
-        )
-
-    # decode output
-    output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-    print(f"output shape: {output_ids.shape}")
-    print(f"generated output: {output_text}")
 
 def test_with_random_tokens_and_weights():
 
@@ -676,5 +596,8 @@ def test_with_random_tokens_and_weights():
     print(f"new generated token: {output_ids.shape[1] - seq_len}")
 
 if __name__ == "__main__":
-    # out_with_pretrained_model()
     test_with_random_tokens_and_weights()
+    # config = Qwen2Config()
+    # m= Qwen2Model(config)
+    # m.setup_optimizers()
+    

@@ -1,2 +1,5 @@
 weights/
 deep*/
+__pycache__/
+*.bin
+qwen-small-tokenizer/
