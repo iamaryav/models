@@ -21,7 +21,9 @@ import pickle
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
 from transformers import AutoTokenizer
+# from torch.cuda.amp import GradScaler
 from models.transformers.qwen2_model import Qwen2Config, Qwen2Model
+# from models.helpers.muon import Muon
 from models.helpers.muon import Muon
 import matplotlib.pyplot as plt
 import matplotlib
@@ -29,9 +31,9 @@ matplotlib.use('Agg')
 
 # --------------------------------------------------------------------------------------
 # User defined constants
-num_iterations = 100 # 5000 # 600 # 1000 # 4000 # 8000
-# eval_every = 500 
-eval_every = 10 
+num_iterations = 2000 # 5000 # 600 # 1000 # 4000 # 8000
+eval_every = 500 
+# eval_every = 10 
 log_interval = 1
 vocab_size: int = 1024
 hidden_size: int = 256 # 256 # 64
@@ -69,13 +71,17 @@ output_dirname = "out"
 # all global variable present in this script
 config_keys = [k for k, v in globals().items() if not k.startswith("_") and isinstance(v, (int, float, bool, str))]
 # print(f"config_keys: {config_keys}")
-exec(open("models/helpers/configurator.py").read()) # overrides from command line or config file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "models", "helpers", "configurator.py")
+print(f"config path: {CONFIG_PATH}")
+exec(open(CONFIG_PATH).read()) # overrides from command line or config file
 user_config = {k: globals()[k] for k in config_keys} # useful for logging
 # --------------------------------------------------------------------------------------
 # I/O setup
 # torchrun --nproc_per_node=1 train.py
 backend = "nccl" # "gloo"
 ddp = int(os.environ.get("RANK", -1)) != -1 # is thi ddp run?
+print(f"ddp run: {ddp}")
 if ddp:
     init_process_group(backend=backend)
     ddp_rank = int(os.environ["RANK"])
@@ -128,6 +134,8 @@ def get_batch(split: str):
     # np memmap is more space efficient than normal file loading
     # it only loads the file in RAM when needed
     if split == "train":
+        # print(f" path for traind data: {os.path.join(data_dir, 'train.bin')}")
+        # print(f"files exists: {os.path.exists(data_dir+ '/train.bin')}")
         data = np.memmap(os.path.join(data_dir, 'train.bin'), dtype=np.uint32, mode='r')
     else:
         data = np.memmap(os.path.join(data_dir, 'val.bin'), dtype=np.uint32, mode='r')
@@ -139,6 +147,7 @@ def get_batch(split: str):
         x, y = x.pin_memory().to(device, non_blocking=True), y.pin_memory().to(device, non_blocking=True)
     else:
         x, y = x.to(device), y.to(device)
+    # print(f"train data size: {x.size(), y.size()}")
     return x, y
 
 meta_path = os.path.join(data_dir, "meta.pkl")
@@ -280,6 +289,9 @@ X, Y = get_batch('train')
 raw_model = model.module if ddp else model # unwrap DDP container if needed
 local_step = 0
 running_mfu = -1.0
+# scaler = GradScaler()
+
+# training run
 for step in range(num_iterations + 1):
     last_step = step == num_iterations
 
@@ -287,6 +299,7 @@ for step in range(num_iterations + 1):
     if last_step or (step % eval_every == 0 and master_process):
         losses = estimate_loss()
         print(f"step {step}/{num_iterations}: train loss: {losses['train']:.4f}, val loss {losses['val']:.4f}")
+        # print(f"evaluating training loss...")
         val_losses.append(losses["val"].item())
         iterations.append(step)
         if wandb_log:
@@ -320,17 +333,27 @@ for step in range(num_iterations + 1):
     t0 = time.time()
     # single batch combined with several mini batches
     for micro_step in range(grad_accum_steps):
+        # print(f"inside combined microstep loss ddp: {ddp}")
         if ddp:
             model.require_backward_grad_sync = (micro_step == grad_accum_steps - 1)
         with autocast_ctx:
+            # print(f"inside autocast")
             logits, loss = model(X, Y)
+            # print(f"loss calculated: {loss}")
             loss = loss / grad_accum_steps
+            # print(f"loss calculated: {loss}")
+        # print(f"outside autocast")
         loss.backward()
+        # scaler.scale(loss).backward()
+        # print(f"get the train batch")
         X, Y = get_batch("train")
+        # print(f"I have the train batch")
     
     if grad_clip > 0.0:
+        # print(f"inside gradient clipping")
         torch.nn.utils.clip_grad_norm_(raw_model.parameters(), grad_clip)
 
+    # print(f"before optimizers")
     # step the optimizers
     lrm = get_lr_multiplier(step)
     for opt in optimizers:
@@ -342,6 +365,8 @@ for step in range(num_iterations + 1):
     for opt in optimizers:
         opt.step()
     model.zero_grad(set_to_none=True)
+    # print(f"after optimizers")
+
     # -----------------------------------------------------------------------------------
     # timing and logging
     t1 = time.time()
