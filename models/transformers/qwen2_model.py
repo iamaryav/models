@@ -22,21 +22,23 @@ from models.helpers.muon import Muon
 class Qwen2Config():
 
     # For PC & local testing
-    vocab_size: int = 1024
-    hidden_size: int = 64
-    intermediate_size: int = 320 
-    num_hidden_layers: int = 2
-    num_attention_heads: int = 4
-    num_key_value_heads: int = 2 
-    max_seq_len: int = 1024
+    # vocab_size: int = 1024
+    # hidden_size: int = 64
+    # intermediate_size: int = 320 
+    # num_hidden_layers: int = 2
+    # num_attention_heads: int = 4
+    # num_key_value_heads: int = 2 
+    # max_seq_len: int = 1024
 
     # Actual Config 
     # vocab_size: int = 151936
-    # hidden_size: int = 1536
-    # num_hidden_layers: int = 28
-    # num_attention_heads: int = 12
-    # num_key_value_heads: int = 2 
-    # intermediate_size: int = 8960 # 5 times of hidden size
+    vocab_size: int = 1024
+    hidden_size: int = 1536
+    num_hidden_layers: int = 28
+    num_attention_heads: int = 12
+    num_key_value_heads: int = 2 
+    intermediate_size: int = 8960 # 5 times of hidden size
+    max_seq_len: int = 1024
     # max_seq_len: int = 32678
 
     # making false to match nanochat gpt py
@@ -500,7 +502,9 @@ class Qwen2Model(nn.Module):
         matrix_Params = list(param for param in self.model.layers.parameters() if param.dim() >= 2)
         embedding_params=  list(self.model.embed_tokens.parameters())
         lm_head_params = list(self.lm_head.parameters())
-        assert len(list(self.parameters())) == len(matrix_Params) + len(embedding_params) + len(lm_head_params) + 5
+        print(f"self parameters: {len(list(self.parameters()))}, matrix_params: {len(matrix_Params)}, embeddings_params: {len(embedding_params)} lm_head_params: {len(lm_head_params)}")
+        # assert len(list(self.parameters())) == len(matrix_Params) + len(embedding_params) + len(lm_head_params) + 5
+        assert len(list(self.parameters())) == len(matrix_Params) + len(embedding_params) + len(lm_head_params) + 57
         # AdamW optimizer is used for the embedding and lm_head
         # this below line scales the LR for the AdamW parameters by 1/(model ** 0.5)
         dmodel_lr_scale = (model_dim / 64) ** -0.5
