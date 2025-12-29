@@ -1,4 +1,6 @@
 numpy
 transformers
-pytorch
+torch
+torchvision 
+torchaudio
 matplotlib
