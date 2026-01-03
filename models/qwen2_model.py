@@ -16,7 +16,7 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from models.helpers.muon import Muon
+from models.muon import Muon
 
 @dataclass
 class Qwen2Config():

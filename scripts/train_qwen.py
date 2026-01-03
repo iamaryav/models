@@ -22,9 +22,9 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
 from transformers import AutoTokenizer
 # from torch.cuda.amp import GradScaler
-from models.transformers.qwen2_model import Qwen2Config, Qwen2Model
+from models.qwen2_model import Qwen2Config, Qwen2Model
 # from models.helpers.muon import Muon
-from models.helpers.muon import Muon
+from models.muon import Muon
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg') 
