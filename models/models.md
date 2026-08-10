@@ -1,8 +1,17 @@
-## currently...
+## Core ML sequence
+Numpy, Pandas, Scikit Learn, PyTorch, CUDA
 
-- TF-IDF in MLP Logistic regression
-- Linear Regression | House-price prediction with California Housing | sklearns, numpy
-- Scale to larger datasets: evaluation metrics, train/test split, batch training, learning-rate scheduler, dropout, BatchNorm / LayerNorm, early stopping, inference pipeline
+Complete these fundamentals before moving to sequence models and transformers:
+
+1. **Evaluation and data splits** — define the task and metric; create train, validation, and held-out test sets; prevent duplicate leakage; establish a simple baseline.
+2. **Linear Regression** — California Housing in scikit-learn, then NumPy; learn the loss, gradients, and regularization.
+3. **Logistic Regression** — binary classification in scikit-learn, then NumPy; implement sigmoid, binary cross-entropy, thresholding, accuracy, precision, recall, and F1.
+4. **Text classification baselines** — TF-IDF + Naive Bayes and Logistic Regression for spam detection; fit all preprocessing only on training data.
+5. **MLPs** — build a scikit-learn baseline, then implement a one-hidden-layer network in NumPy, then PyTorch; learn forward passes, backpropagation, ReLU, sigmoid/softmax, and loss functions.
+6. **Training loops at scale** — mini-batches, epochs, shuffling, validation loss, checkpoints, and inference pipelines.
+7. **Regularization and stability** — L1/L2 regularization, dropout, learning-rate scheduling, BatchNorm/LayerNorm, early stopping, and overfitting diagnostics.
+
+For each selected from-scratch project: build the scikit-learn reference first, reimplement it in NumPy, compare logits/loss/gradients on a small fixed dataset, then use PyTorch for larger training runs.
 
 ## Neural-network architectures Pre-training
 
@@ -44,16 +53,18 @@
 
 ## ML problems
 
-| Tier | Algorithm | Study focus | Suggested problem |
-| --- | --- | --- | --- |
-| Tier 1 | Linear & Logistic Regression | Normal equation, gradient descent, and L1/L2 regularization | Titanic survival or binary Iris classification |
-| Tier 1 | Neural Networks / MLPs | Forward and backward passes; ReLU, sigmoid, tanh, softmax, and loss functions | XOR (to demonstrate non-linearity) or MNIST |
-| Tier 1 | PCA, SVD & Eigendecomposition | Explained variance and dimensionality reduction | Eigenfaces or 2D visualization of Iris |
-| Tier 2 | K-Means | Lloyd's algorithm, initialization, and the elbow method | Customer segmentation or image color quantization |
-| Tier 2 | Decision Tree | Entropy/Gini splitting criteria and pruning | Iris or Titanic |
-| Tier 2 | Random Forest | Bagging, feature randomness, and out-of-bag error | Feature importance on a tabular dataset |
-| Tier 2 | Gradient Boosting (XGBoost) | Boosting intuition and gradient-based updates | Kaggle-style tabular regression |
-| Tier 3 | SVM | Hinge loss, the RBF kernel trick, and the dual formulation | XOR with an RBF kernel or handwritten digits |
-| Tier 3 | Naive Bayes | Conditional probability and Laplace smoothing | Spam detection |
-| Tier 3 | t-SNE / UMAP | Visualization and loss-function intuition | 2D visualization of high-dimensional embeddings |
-| Tier 3 | KNN | Distance metrics, neighbor selection, and voting | MNIST benchmark |
+| Tier | Algorithm | Implementation target | Study focus | Recommended dataset | Dataset details |
+| --- | --- | --- | --- | --- | --- |
+| Tier 1 | Linear Regression | scikit-learn, then full NumPy | Normal equation, gradient descent, and L1/L2 regularization | [California Housing](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html) | Regression; 20,640 districts and 8 numerical features. Start with scikit-learn, then reproduce it in NumPy. |
+| Tier 1 | Logistic Regression | scikit-learn, then full NumPy | Sigmoid, binary cross-entropy, thresholding, and classification metrics | [Breast Cancer Wisconsin](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html) | Binary classification; 569 samples and 30 numerical features. Small enough to inspect every gradient. |
+| Tier 1 | Softmax Regression | scikit-learn, then full NumPy | Multiclass Logistic Regression, numerically stable softmax, and cross-entropy | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | 10-class digit classification; verify that class probabilities sum to one. |
+| Tier 1 | KNN | scikit-learn | Distance metrics, neighbor selection, and voting | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | Learn how scaling and the choice of k affect performance. |
+| Tier 1 | Decision Tree | scikit-learn, then simple NumPy | Entropy/Gini splitting criteria and pruning | [Adult Income](https://archive.ics.uci.edu/dataset/2/adult) | Tabular binary classification with mixed categorical and numerical features; practice encoding and pruning. |
+| Tier 2 | Random Forest | scikit-learn | Bagging, feature randomness, out-of-bag error, and feature importance | [Adult Income](https://archive.ics.uci.edu/dataset/2/adult) | Reuse the Decision Tree preprocessing, then compare a single tree with a forest. |
+| Tier 2 | Naive Bayes | scikit-learn | Conditional probability and Laplace smoothing | [UCI SMS Spam Collection](https://archive-beta.ics.uci.edu/dataset/228/sms%2Bspam%2Bcollection/files) | 5,574 labelled SMS messages. Compare count vectors and TF-IDF with Logistic Regression. |
+| Tier 2 | Neural Networks / MLPs | scikit-learn, then full NumPy, then PyTorch | Forward/backward passes; ReLU, sigmoid, softmax, and loss functions | XOR (create manually) → [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | Implement mini-batch SGD, momentum, Adam, and finite-difference gradient checks; then move to PyTorch. |
+| Tier 2 | PCA, SVD & Eigendecomposition | scikit-learn | Explained variance and dimensionality reduction | [Olivetti Faces](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_olivetti_faces.html) | Create eigenfaces and reconstruct images with different component counts. |
+| Tier 3 | K-Means | scikit-learn | Lloyd's algorithm, initialization, and the elbow method | [UCI Online Retail](https://archive.ics.uci.edu/dataset/352/online%2Bretail) | Aggregate transactions into RFM features per customer, then cluster customers. |
+| Tier 3 | SVM | scikit-learn | Hinge loss, the RBF kernel trick, and the dual formulation | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | Multiclass handwritten digits; compare linear and RBF SVMs after feature scaling. |
+| Tier 3 | Gradient Boosting (XGBoost) | XGBoost/scikit-learn | Boosting intuition and gradient-based updates | [California Housing](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html) | Reuse the regression pipeline; compare boosted trees against linear regression and random forests. |
+| Tier 3 | t-SNE / UMAP | Study conceptually; use scikit-learn/UMAP | Visualization and loss-function intuition | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | Visualize the 64-dimensional digit vectors in 2D; color points by digit class. |

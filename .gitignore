@@ -5,3 +5,4 @@ __pycache__/
 qwen-small-tokenizer/
 *.pt
 out/
+*.csv
