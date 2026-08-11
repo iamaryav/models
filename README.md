@@ -1,1 +1,3 @@
 # Playing with models...
+- Foundational architecutres and ML algorightms
+- Implementing Pre-training, Post-training, RL Envs techinques

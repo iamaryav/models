@@ -6,3 +6,6 @@ qwen-small-tokenizer/
 *.pt
 out/
 *.csv
+data/
+datasets/
+*.pth
