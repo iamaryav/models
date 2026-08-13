@@ -42,14 +42,25 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 - Data curation — quality filtering, deduplication, decontamination, and balanced instruction/task datasets
 - Supervised fine-tuning (SFT) — instruction following, chat formatting, structured outputs, and domain adaptation
 - Tool-use and agent training — function calling, retrieval, code execution, web/computer use, and multi-step task traces
-- Human feedback and reward modeling (RLHF) — collect human-ranked responses; train reliable reward models or reward graders
-- Direct Preference Optimization (DPO) — align style, helpfulness, and other subjective preferences using chosen/rejected pairs
+- Human feedback and reward modeling (RLHF) — collect human-ranked responses (e.g., InstructGPT); train reliable reward models or reward graders
+- Preference Optimization Algorithms — Direct Preference Optimization (DPO), ORPO, SimPO, Kahneman-Tversky Optimization (KTO), and RLOO
 - RL environments and verifiers — build reset/step task environments, tool sandboxes, outcome checkers, and reward signals for agent rollouts
-- RLHF and reinforcement learning with verifiable rewards — optimize reasoning, coding, and tool-use tasks with human feedback or checkable graders; study PPO and GRPO (Group Relative Policy Optimization)
+- Reinforcement Learning with verifiable rewards — optimize reasoning, coding, and tool-use tasks using Proximal Policy Optimization (PPO) and Group Relative Policy Optimization (GRPO) (e.g., DeepSeekMath, DeepSeek-R1)
+- Constitutional AI — training models to self-critique and revise responses based on a set of rules or principles
 - Reasoning post-training — process supervision, outcome verification, self-correction, and test-time compute strategies
 - Safety alignment — refusal behavior, policy training, adversarial red-teaming, and safety evals
 - Distillation — use a stronger model to create data and train smaller, faster specialist models
+- Advanced Evaluation Benchmarks — progression tracking across MMLU-Pro → GPQA → SWE-bench → IFEval → RewardBench → Arena/MT-Bench
 - Continuous evaluation and iteration — monitor reward hacking, regressions, and capability/safety trade-offs; improve data, graders, and training
+
+## Agentic Orchestration & RAG
+
+- Retrieval-Augmented Generation (RAG) — vector databases (e.g., Chroma, FAISS), document chunking strategies, embedding models, and hybrid search
+- Advanced RAG — query routing, self-correction, re-ranking, and parent-document retrieval
+- LangChain — chains, prompt templates, output parsers, memory, and the broader tool integration ecosystem
+- LangGraph — stateful, multi-actor applications built on LLMs; modeling complex agent workflows as cyclic graphs
+- LlamaIndex — data frameworks specifically optimized for ingesting, structuring, and accessing private/domain-specific data
+- Agentic Patterns — ReAct (Reasoning and Acting) prompting, multi-agent collaboration, and Human-in-the-loop (HITL)
 
 ## ML problems
 
@@ -68,3 +79,14 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 | Unsupervised / Distance | t-SNE / UMAP | Study conceptually; use scikit-learn/UMAP | Visualization and loss-function intuition | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | Visualize the 64-dimensional digit vectors in 2D; color points by digit class. |
 | Classical ML | Naive Bayes | scikit-learn | Conditional probability and Laplace smoothing | [UCI SMS Spam Collection](https://archive-beta.ics.uci.edu/dataset/228/sms%2Bspam%2Bcollection/files) | 5,574 labelled SMS messages. Compare count vectors and TF-IDF with Logistic Regression. |
 | Classical ML | SVM | scikit-learn | Hinge loss, the RBF kernel trick, and the dual formulation | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | Multiclass handwritten digits; compare linear and RBF SVMs after feature scaling. |
+
+## Projects
+
+- RL library in C/Python
+
+## Papers
+
+- Kimi 3/ DS technical papers - K3
+- DeepSeek v4
+- palm/palm2
+- chinchilla
