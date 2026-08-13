@@ -90,3 +90,7 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 - DeepSeek v4
 - palm/palm2
 - chinchilla
+
+----
+Model Card 
+----
