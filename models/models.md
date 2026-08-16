@@ -92,5 +92,7 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 - chinchilla
 
 ----
+
 Model Card 
+
 ----
