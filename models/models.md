@@ -16,7 +16,7 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 ## Neural-network architectures Pre-training
 
 ### Text, sequence, and transformer models
-- Re-implement bigram -> makemore -> gpt
+- Linear → Logistic → Softmax → NN/MLP → bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → GPT
 - RNN (Recurrent Neural Network) — including LSTM and GRU
 - Transformer — self-attention, positional embeddings, encoder/decoder blocks, and training loop
 - LLM (Large Language Model) — e.g., GPT, LLaMA
@@ -29,7 +29,7 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 
 ### Vision and multimodal models
 
-- CNN (Convolutional Neural Network) — CNN → ResNet → Vision Transformer (ViT) → fine-tune on CIFAR-10/custom dataset
+- Linear on pixels → Logistic on images → Softmax on MNIST → MLP on CIFAR-10 → Conv + Pool from scratch → LeNet → AlexNet → VGG → ResNet → ViT → fine-tune on CIFAR-10/custom dataset
 - SAM (Segment Anything Model) — promptable image segmentation
 - VLM (Vision-Language Model) — image-text understanding, e.g., CLIP and Flamingo
 - MLLM (Multimodal Large Language Model) — text with images, audio, video, or other modalities
