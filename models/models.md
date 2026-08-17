@@ -16,7 +16,7 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 ## Neural-network architectures Pre-training
 
 ### Text, sequence, and transformer models
-- Linear → Logistic → Softmax → NN/MLP → bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → GPT
+- Linear → Logistic → Softmax → NN/MLP → bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → GPT | ML Models...
 - RNN (Recurrent Neural Network) — including LSTM and GRU
 - Transformer — self-attention, positional embeddings, encoder/decoder blocks, and training loop
 - LLM (Large Language Model) — e.g., GPT, LLaMA
