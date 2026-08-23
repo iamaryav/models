@@ -61,6 +61,7 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 - LangGraph — stateful, multi-actor applications built on LLMs; modeling complex agent workflows as cyclic graphs
 - LlamaIndex — data frameworks specifically optimized for ingesting, structuring, and accessing private/domain-specific data
 - Agentic Patterns — ReAct (Reasoning and Acting) prompting, multi-agent collaboration, and Human-in-the-loop (HITL)
+- MCP
 
 ## ML problems
 
