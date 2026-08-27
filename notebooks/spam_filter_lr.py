@@ -63,6 +63,9 @@ def backward(x, y_hat, y):
     # dl / db = dl_dz * dz/db
     dl_db = dl_dz.sum(axis=0) # (out_dim,)
 
+    # simple formula
+    # (1 / n_samples) * x.T @ (y_hat - y) 
+
     # gradient value for all the weights
     return dl_dw, dl_db
 
