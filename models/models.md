@@ -1,47 +1,16 @@
 ## Core ML sequence
 
-Numpy, Pandas, Scikit Learn, PyTorch, CUDA
-
-Complete these fundamentals before moving to sequence models and transformers:
-
-1. **Evaluation and data splits** — define the task and metric; create train, validation, and held-out test sets; prevent duplicate leakage; establish a simple baseline.
-2. **Linear Regression** — California Housing in scikit-learn, then NumPy; learn the loss, gradients, and regularization.
-3. **Logistic Regression** — binary classification in scikit-learn, then NumPy; implement sigmoid, binary cross-entropy, thresholding, accuracy, precision, recall, and F1.
-4. **Text classification baselines** — TF-IDF + Naive Bayes and Logistic Regression for spam detection; fit all preprocessing only on training data.
-5. **MLPs** — build a scikit-learn baseline, then implement a one-hidden-layer network in NumPy, then PyTorch; learn forward passes, backpropagation, ReLU, sigmoid/softmax, and loss functions.
-6. **Training loops at scale** — mini-batches, epochs, shuffling, validation loss, checkpoints, and inference pipelines.
-7. **Regularization and stability** — L1/L2 regularization, dropout, learning-rate scheduling, BatchNorm/LayerNorm, early stopping, and overfitting diagnostics.
-
-For each selected from-scratch project: build the scikit-learn reference first, reimplement it in NumPy, compare logits/loss/gradients on a small fixed dataset, then use PyTorch for larger training runs.
-
 ## Neural-network architectures Pre-training
 
-
+Numpy, Pandas, Scikit Learn, PyTorch, CUDA
 
 ### Text, sequence, and transformer models
 
-- Linear → Logistic → Softmax → NN/MLP → bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → GPT | ML Models...
-- RNN (Recurrent Neural Network) — including LSTM and GRU
-- Transformer — self-attention, positional embeddings, encoder/decoder blocks, and training loop
-- LLM (Large Language Model) — e.g., GPT, LLaMA
-- SLM (Small Language Model) — efficient language models for edge or low-memory use
-- MoE (Mixture of Experts) — sparse expert routing for scalable transformers
-- SSM (State Space Model) — efficient long-sequence models, e.g., Mamba and RetNet
-- LNN (Liquid Neural Network) — adaptive, continuous-time sequence models
-- RLM (Reasoning Language Model) — multi-step reasoning, tool use, and test-time scaling
-- LAM (Large Action Model) — planning and generating physical or digital action sequences
-
-
+Linear → Logistic → Softmax → NN/MLP → |bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → RNN → LSTM → GRU → GPT → SLM → MoE → SSM → LNN → RLM → LAM Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4 → Kimi K3 → Model Card
 
 ### Vision and multimodal models
 
-- Linear on pixels → Logistic on images → Softmax on MNIST → MLP on CIFAR-10 → LeNet + Conv + Pool from scratch → AlexNet → VGG → ResNet → ViT → fine-tune on CIFAR-10/custom dataset
-- SAM (Segment Anything Model) — promptable image segmentation
-- VLM (Vision-Language Model) — image-text understanding, e.g., CLIP and Flamingo
-- MLLM (Multimodal Large Language Model) — text with images, audio, video, or other modalities
-- VLA (Vision-Language-Action Model) — convert visual and language inputs into robot or embodied-agent actions
-
-
+Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → |LeNet + Conv + Pool from scratch → AlexNet → VGG/ResNet → ViT → Diffusion → SAM → VLM → MLLM → VLA
 
 ## Post-training
 
@@ -100,19 +69,4 @@ For each selected from-scratch project: build the scikit-learn reference first, 
 ## Projects
 
 - RL library in C/Python
-
-
-
-## Papers
-
-- Kimi 3/ DS technical papers - K3
-- DeepSeek v4
-- palm/palm2
-- chinchilla
-
----
-
-Model Card 
-
----
 
