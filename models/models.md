@@ -3,10 +3,12 @@
 ## Neural-network architectures Pre-training
 
 Numpy, Pandas, Scikit Learn, PyTorch, CUDA
+- RL library in C/Python
 
 ### Text, sequence, and transformer models
 
-Linear → Logistic → Softmax → NN/MLP → |bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → RNN → LSTM → GRU → GPT → SLM → MoE → SSM → LNN → RLM → LAM Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4 → Kimi K3 → Model Card
+Linear → Logistic → Softmax → NN/MLP → |bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → RNN → LSTM → GRU → GPT → SLM → MoE → SSM → LNN → RLM → LAM   
+Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4 → Kimi K3 → Model Card
 
 ### Vision and multimodal models
 
@@ -44,29 +46,29 @@ Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → |LeNet + Conv +
 
 
 
-## ML problems
+ML problems
 
+Core AI / DL
 
-| Category                | Algorithm                     | Implementation target                       | Study focus                                                                   | Recommended dataset                                                                                                           | Dataset details                                                                                             |
-| ----------------------- | ----------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Core AI / DL            | Linear Regression             | scikit-learn, then full NumPy               | Normal equation, gradient descent, and L1/L2 regularization                   | [California Housing](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html)        | Regression; 20,640 districts and 8 numerical features. Start with scikit-learn, then reproduce it in NumPy. |
-| Core AI / DL            | Logistic Regression           | scikit-learn, then full NumPy               | Sigmoid, binary cross-entropy, thresholding, and classification metrics       | [Breast Cancer Wisconsin](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html)         | Binary classification; 569 samples and 30 numerical features. Small enough to inspect every gradient.       |
-| Core AI / DL            | Softmax Regression            | scikit-learn, then full NumPy               | Multiclass Logistic Regression, numerically stable softmax, and cross-entropy | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)                         | 10-class digit classification; verify that class probabilities sum to one.                                  |
-| Core AI / DL            | Neural Networks / MLPs        | scikit-learn, then full NumPy, then PyTorch | Forward/backward passes; ReLU, sigmoid, softmax, and loss functions           | XOR (create manually) → [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html) | Implement mini-batch SGD, momentum, Adam, and finite-difference gradient checks; then move to PyTorch.      |
-| Core AI / DL            | PCA, SVD & Eigendecomposition | scikit-learn                                | Explained variance and dimensionality reduction                               | [Olivetti Faces](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_olivetti_faces.html)                | Create eigenfaces and reconstruct images with different component counts.                                   |
-| Tree-Based              | Decision Tree                 | scikit-learn, then simple NumPy             | Entropy/Gini splitting criteria and pruning                                   | [Adult Income](https://archive.ics.uci.edu/dataset/2/adult)                                                                   | Tabular binary classification with mixed categorical and numerical features; practice encoding and pruning. |
-| Tree-Based              | Random Forest                 | scikit-learn                                | Bagging, feature randomness, out-of-bag error, and feature importance         | [Adult Income](https://archive.ics.uci.edu/dataset/2/adult)                                                                   | Reuse the Decision Tree preprocessing, then compare a single tree with a forest.                            |
-| Tree-Based              | Gradient Boosting (XGBoost)   | XGBoost/scikit-learn                        | Boosting intuition and gradient-based updates                                 | [California Housing](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html)        | Reuse the regression pipeline; compare boosted trees against linear regression and random forests.          |
-| Unsupervised / Distance | K-Means                       | scikit-learn                                | Lloyd's algorithm, initialization, and the elbow method                       | [UCI Online Retail](https://archive.ics.uci.edu/dataset/352/online%2Bretail)                                                  | Aggregate transactions into RFM features per customer, then cluster customers.                              |
-| Unsupervised / Distance | KNN                           | scikit-learn                                | Distance metrics, neighbor selection, and voting                              | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)                         | Learn how scaling and the choice of k affect performance.                                                   |
-| Unsupervised / Distance | t-SNE / UMAP                  | Study conceptually; use scikit-learn/UMAP   | Visualization and loss-function intuition                                     | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)                         | Visualize the 64-dimensional digit vectors in 2D; color points by digit class.                              |
-| Classical ML            | Naive Bayes                   | scikit-learn                                | Conditional probability and Laplace smoothing                                 | [UCI SMS Spam Collection](https://archive-beta.ics.uci.edu/dataset/228/sms%2Bspam%2Bcollection/files)                         | 5,574 labelled SMS messages. Compare count vectors and TF-IDF with Logistic Regression.                     |
-| Classical ML            | SVM                           | scikit-learn                                | Hinge loss, the RBF kernel trick, and the dual formulation                    | [Optical Digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)                         | Multiclass handwritten digits; compare linear and RBF SVMs after feature scaling.                           |
+- Linear Regression
+- Logistic Regression
+- Softmax Regression
+- Neural Networks / MLPs
+- PCA, SVD & Eigendecomposition
 
+Tree-Based
 
+- Decision Tree
+- Random Forest
+- Gradient Boosting (XGBoost)
 
+Unsupervised / Distance
 
-## Projects
+- K-Means
+- KNN
+- t-SNE / UMAP
 
-- RL library in C/Python
+Classical ML
 
+- Naive Bayes
+- SVM
