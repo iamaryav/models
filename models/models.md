@@ -3,11 +3,12 @@
 ## Neural-network architectures Pre-training
 
 Numpy, Pandas, Scikit Learn, PyTorch, CUDA
+
 - RL library in C/Python
 
 ### Text, sequence, and transformer models
 
-Linear → Logistic → Softmax → NN/MLP → |bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → RNN → LSTM → GRU → GPT → SLM → MoE → SSM → LNN → RLM → LAM   
+Linear → Logistic → Softmax → NN/MLP → |bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → RNN → LSTM → GRU → GPT → SLM → MoE → SSM → LNN → RLM → LAM  
 Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4 → Kimi K3 → Model Card
 
 ### Vision and multimodal models
@@ -15,6 +16,8 @@ Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4 → Kimi K3 → Model Card
 Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → |LeNet + Conv + Pool from scratch → AlexNet → VGG/ResNet → ViT → Diffusion → SAM → VLM → MLLM → VLA
 
 ## Post-training
+
+- Books/Papers
 
 - Evaluation design — build capability, safety, and regression evals before training; keep a held-out test set
 - Capability profiling — map strengths and failure modes across tasks, languages, reasoning, safety, and tool use to target post-training
@@ -44,8 +47,6 @@ Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → |LeNet + Conv +
 - Agentic Patterns — ReAct (Reasoning and Acting) prompting, multi-agent collaboration, and Human-in-the-loop (HITL)
 - MCP
 
-
-
 ML problems
 
 Core AI / DL
@@ -72,3 +73,4 @@ Classical ML
 
 - Naive Bayes
 - SVM
+
