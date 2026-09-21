@@ -9,11 +9,11 @@ Numpy, Pandas, Scikit Learn, PyTorch, CUDA
 ### Text, sequence, and transformer models
 
 Linear → Logistic → Softmax → NN/MLP → |bigram → makemore series (MLP w/ embeddings, BatchNorm, WaveNet-like) → RNN → LSTM → GRU → GPT → SLM → MoE → SSM → LNN → RLM → LAM  
-Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4 → Kimi K3 → Model Card
+Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4.1 → Kimi K3 → Model Card
 
 ### Vision and multimodal models
 
-Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → |LeNet + Conv + Pool from scratch → AlexNet → VGG/ResNet → ViT → Diffusion → SAM → VLM → MLLM → VLA
+Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → LeNet + Conv + Pool from scratch → AlexNet → |VGG/ResNet → ViT → Diffusion → SAM → VLM → MLLM → VLA
 
 ## Post-training
 
