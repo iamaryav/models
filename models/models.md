@@ -13,7 +13,7 @@ Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4.1 → Kimi K3 → Model Car
 
 ### Vision and multimodal models
 
-Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → LeNet + Conv + Pool from scratch → AlexNet → |VGG/ResNet → ViT → Diffusion → SAM → VLM → MLLM → VLA
+Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → LeNet + Conv + Pool from scratch → AlexNet → VGG/ResNet → |ViT → VLM (MLLM) → Diffusion/stable → DiT |  (SAM, VLA)
 
 ## Post-training
 
