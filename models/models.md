@@ -2,7 +2,8 @@
 
 ## Neural-network architectures Pre-training
 
-Numpy, Pandas, Scikit Learn, PyTorch, CUDA/Triton
+#### Books/Papers - Implementation
+- Numpy, Pandas, Scikit Learn, PyTorch, CUDA/Triton
 
 - RL library in C/Python
 
@@ -17,7 +18,6 @@ Linear → Logistic → Softmax on MNIST → MLP on CIFAR-10 → LeNet + Conv + 
 
 ## Post-training
 
-- Books/Papers
 
 - Evaluation design — build capability, safety, and regression evals before training; keep a held-out test set
 - Capability profiling — map strengths and failure modes across tasks, languages, reasoning, safety, and tool use to target post-training
