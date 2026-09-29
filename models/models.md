@@ -2,7 +2,7 @@
 
 ## Neural-network architectures Pre-training
 
-Numpy, Pandas, Scikit Learn, PyTorch, CUDA
+Numpy, Pandas, Scikit Learn, PyTorch, CUDA/Triton
 
 - RL library in C/Python
 
