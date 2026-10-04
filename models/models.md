@@ -4,12 +4,13 @@
 #### Books/Papers - Implementation | Read/Recreate Paper/blogpost
 - resnet -> vit 
 - Papers -> Chinchilla → PaLM/PaLM 2 → DeepSeek v4.1 → Kimi K3 -> GLM → Model Card
-- Numpy, Pandas, Scikit Learn, PyTorch, CUDA/Triton
+
+- Autograd → MLP → Activations → SGD → Bigram → MLP w/ embeddings → Word2Vec → BatchNorm → WaveNet-like → LeNet → AlexNet → VGG → ResNet → Style Transfer → VAE → GAN → DQN → Distillation → RNN → LSTM → GRU → Attention → Transformer → BLEU → BERT → GPT-2 → ViT → Diffusion → DiT → RoPE → LoRA → SLM → Llama 2 → Mistral 7B → NeoBERT → MoE → SSM → LNN → VLM → SAM → Llama 4 → RLM → LAM → VLA
+
+- PyTorch, CUDA/Triton, Numpy, Scikit Learn, Pandas
 - RL library in C/Python
 
 ### Sequence by architecture type
-
-- Full order (paper → torch): Autograd → MLP → Activations → SGD → Bigram → MLP w/ embeddings → Word2Vec → BatchNorm → WaveNet-like → LeNet → AlexNet → VGG → ResNet → Style Transfer → VAE → GAN → DQN → Distillation → RNN → LSTM → GRU → Attention → Transformer → BLEU → BERT → GPT-2 → ViT → Diffusion → DiT → RoPE → LoRA → SLM → Llama 2 → Mistral 7B → NeoBERT → MoE → SSM → LNN → VLM → SAM → Llama 4 → RLM → LAM → VLA
 - MLP: Autograd → NN / MLP → Activations → SGD → Bigram → MLP w/ embeddings → Word2Vec → BatchNorm → WaveNet-like
 - RNN: RNN → LSTM → GRU → LNN
 - CNN: LeNet → AlexNet → VGG / ResNet → Style Transfer
@@ -22,9 +23,7 @@
 - RL: DQN
 - Adaptation: Distillation → LoRA
 
-
 ## Post-training
-
 - Evaluation: Evaluation design → Capability profiling → Continuous evaluation
 - Data: Data curation
 - Supervised: SFT → Tool-use and agent training
@@ -41,7 +40,6 @@
 - Dimensionality reduction: PCA / SVD → t-SNE / UMAP → Collaborative Filtering
 
 ## Agentic Orchestration & RAG
-
 - RAG: RAG → Advanced RAG
 - Frameworks: LangChain → LangGraph → LlamaIndex
 - Agents: Agentic Patterns (ReAct, multi-agent, HITL) → MCP
